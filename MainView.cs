@@ -22,52 +22,27 @@ namespace samskip.rating_browser
             InitializeComponent();
         }
 
-        private void AddRowToResults(string[] array)
-        {
-            if (dataGridViewResult != null) if (array != null) dataGridViewResult.Rows.Add(array);
-        }
-
-        private void ResetResults()
-        {
-            if (dataGridViewResult != null) dataGridViewResult.Rows.Clear();
-        }
-
         private void OnClickUpdateLastYear(object sender, EventArgs e)
         {
-            dataGridViewResult.Rows.Clear();
             var asyncRatingsObject = _clientAPI.Get<RatingsAPICall>("api/v1.1/rate/lastyear?key=" + Settings.Default.ITAPIKEY).Result;
-            foreach (var rating in asyncRatingsObject.Data.Ratings)
-            {
-                AddRowToResults(new[]{rating.Fullname,
-                                    rating.Stars.ToString(), rating.Jirakey, rating.Created.ToString(), rating.Comment});
-            }
-        }
-
-        private void OnClickQuit(object sender, EventArgs e)
-        {
-            Application.Exit();
+            dataGridViewResult.DataSource = asyncRatingsObject.Data.Ratings;
         }
 
         private void OnClickLoadMonth(object sender, EventArgs e)
         {
-            if (dataGridViewResult != null) dataGridViewResult.Rows.Clear();
-            
             var asyncRatingsObject = _clientAPI.Get<RatingsAPICall>("api/v1.1/rate/lastmonth?key=" + Settings.Default.ITAPIKEY).Result;
-            foreach (var rating in asyncRatingsObject.Data.Ratings)
-            {
-                AddRowToResults(new[]{rating.Fullname,
-                                    rating.Stars.ToString(), rating.Jirakey, rating.Created.ToString(), rating.Comment});
-            }
+            dataGridViewResult.DataSource = asyncRatingsObject.Data.Ratings;
         }
 
         private void OnClickLoadLastWeek(object sender, EventArgs e)
         {
             RatingsAPICall asyncRatingsObject = _clientAPI.Get<RatingsAPICall>("api/v1.1/rate/lastweek?key=" + Settings.Default.ITAPIKEY).Result;
-            foreach (var rating in asyncRatingsObject.Data.Ratings)
-            {
-                AddRowToResults(new[]{rating.Fullname,
-                                    rating.Stars.ToString(), rating.Jirakey, rating.Created.ToString(), rating.Comment});
-            }
+            dataGridViewResult.DataSource = asyncRatingsObject.Data.Ratings;
+        }
+
+        private void OnClickQuit(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
 
         private void OnClickExportExcel(object sender, EventArgs e)
